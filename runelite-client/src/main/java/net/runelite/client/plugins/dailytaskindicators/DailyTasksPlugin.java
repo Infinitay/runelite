@@ -32,9 +32,10 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.Varbits;
 import net.runelite.api.events.ConfigChanged;
-import net.runelite.api.events.GameTick;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.client.chat.ChatColor;
 import net.runelite.client.chat.ChatColorType;
@@ -61,7 +62,7 @@ public class DailyTasksPlugin extends Plugin
 	private ChatMessageManager chatMessageManager;
 
 	private boolean canCollectHerbBox, canCollectStaves, canCollectEssence;
-	private boolean sentMessageThisSession;
+	private boolean hasSentHerbMsg, hasSentStavesMsg, hasSentEssenceMsg;
 
 	@Provides
 	DailyTasksConfig provideConfig(ConfigManager configManager)
@@ -72,14 +73,16 @@ public class DailyTasksPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		sentMessageThisSession = canCollectHerbBox = canCollectStaves = canCollectEssence = false;
+		canCollectHerbBox = canCollectStaves = canCollectEssence = false;
+		hasSentHerbMsg = hasSentStavesMsg = hasSentEssenceMsg = false;
 		cacheColors();
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		sentMessageThisSession = canCollectHerbBox = canCollectStaves = canCollectEssence = false;
+		canCollectHerbBox = canCollectStaves = canCollectEssence = false;
+		hasSentHerbMsg = hasSentStavesMsg = hasSentEssenceMsg = false;
 	}
 
 	@Subscribe
@@ -87,58 +90,57 @@ public class DailyTasksPlugin extends Plugin
 	{
 		if (event.getGroup().equals("dailytaskindicators"))
 		{
-
+			if (event.getKey().equals("showHerbBoxes"))
+			{
+				hasSentHerbMsg = false;
+			}
+			else if (event.getKey().equals("showStaves"))
+			{
+				hasSentStavesMsg = false;
+			}
+			else if (event.getKey().equals("showEssence"))
+			{
+				hasSentEssenceMsg = false;
+			}
 		}
 	}
 
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event)
 	{
-		if (!sentMessageThisSession)
+		if (config.showHerbBoxes())
 		{
-			if (config.showHerbBoxes())
-			{
-				checkCanCollectHerbBox(client.getSetting(Varbits.DAILY_HERB_BOX));
-			}
-			if (config.showStaves())
-			{
-				checkCanCollectStaves(client.getSetting(Varbits.DAILY_STAVES));
-			}
-			if (config.showEssence())
-			{
-				checkCanCollectEssence(client.getSetting(Varbits.DAILY_ESSENCE));
-			}
+			checkCanCollectHerbBox(client.getSetting(Varbits.DAILY_HERB_BOX));
+		}
+		if (config.showStaves())
+		{
+			checkCanCollectStaves(client.getSetting(Varbits.DAILY_STAVES));
+		}
+		if (config.showEssence())
+		{
+			checkCanCollectEssence(client.getSetting(Varbits.DAILY_ESSENCE));
 		}
 	}
 
 	@Subscribe
-	public void onGameTick(GameTick event)
+	public void onGameStateChanged(GameStateChanged event)
 	{
-		if (!sentMessageThisSession)
+		if (event.getGameState().equals(GameState.LOGGED_IN))
 		{
-			if (config.showHerbBoxes() && canCollectHerbBox)
+			if (config.showHerbBoxes() && !hasSentHerbMsg && canCollectHerbBox)
 			{
 				sendChatMessage("You have herb boxes waiting to be collected at NMZ.");
+				hasSentHerbMsg = true;
 			}
-			else
-			{
-				System.out.println(client.getSetting(Varbits.DAILY_HERB_BOX));
-			}
-			if (config.showStaves() && canCollectStaves)
+			if (config.showStaves() && !hasSentStavesMsg && canCollectStaves)
 			{
 				sendChatMessage("You have staves waiting to be collected from Zaff.");
+				hasSentStavesMsg = true;
 			}
-			else
-			{
-				System.out.println(client.getSetting(Varbits.DAILY_STAVES));
-			}
-			if (config.showEssence() && canCollectEssence)
+			if (config.showEssence() && !hasSentEssenceMsg && canCollectEssence)
 			{
 				sendChatMessage("You have pure essence waiting to be collected from Wizard Cromperty.");
-			}
-			else
-			{
-				System.out.println(client.getSetting(Varbits.DAILY_ESSENCE));
+				hasSentEssenceMsg = true;
 			}
 		}
 	}
@@ -168,6 +170,5 @@ public class DailyTasksPlugin extends Plugin
 		final String message = new ChatMessageBuilder()
 			.append(ChatColorType.HIGHLIGHT).append(chatMessage).build();
 		chatMessageManager.queue(QueuedMessage.builder().type(ChatMessageType.GAME).runeLiteFormattedMessage(message).build());
-		sentMessageThisSession = true;
 	}
 }
