@@ -216,6 +216,13 @@ public enum Varbits
 	EXPERIENCE_DROP_COLOR(4695),
 
 	/**
+	 * Tithe Farm
+	 */
+	TITHE_FARM_SACK_AMOUNT(4900),
+	TITHE_FARM_SACK_ICON(5370),
+	TITHE_FARM_POINTS(4893),
+
+	/**
 	 * Raids
 	 */
 	IN_RAID(5432),
@@ -267,14 +274,7 @@ public enum Varbits
 	 * Kingdom Management
 	 */
 	KINGDOM_FAVOR(72),
-	KINGDOM_COFFER(74),
-
-	/**
-	 * Daily Tasks (Collection availability)
-	 */
-	DAILY_HERB_BOX(3961),
-	DAILY_STAVES(4539),
-	DAILY_ESSENCE(4547);
+	KINGDOM_COFFER(74);
 
 	/**
 	 * varbit id
