@@ -39,7 +39,7 @@ public interface DailyTasksConfig extends Config
 		keyName = "showHerbBoxes",
 		name = "Show Herb Boxes",
 		description = "Configures whether or not to show a message when you can" +
-			" <br> collect your daily herb boxes at NMZ",
+			" <br/>collect your daily herb boxes at NMZ",
 		position = 1
 	)
 	default boolean showHerbBoxes()
@@ -51,7 +51,7 @@ public interface DailyTasksConfig extends Config
 		keyName = "showStaves",
 		name = "Show Claimable Staves",
 		description = "Configures whether or not to show a message when you can" +
-			" <br> collect your daily staves from Zaff",
+			" <br/>collect your daily staves from Zaff",
 		position = 2
 	)
 	default boolean showStaves()
@@ -63,7 +63,7 @@ public interface DailyTasksConfig extends Config
 		keyName = "showEssence",
 		name = "Show Claimable Essence",
 		description = "Configures whether or not to show a message when you can" +
-			" <br> collect your daily pure essence from Wizard Cromperty",
+			" <br/>collect your daily pure essence from Wizard Cromperty",
 		position = 3
 	)
 	default boolean showEssence()
