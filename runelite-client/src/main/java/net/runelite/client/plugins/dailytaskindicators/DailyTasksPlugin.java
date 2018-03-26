@@ -147,17 +147,17 @@ public class DailyTasksPlugin extends Plugin
 
 	private void checkCanCollectHerbBox(int varbValue)
 	{
-		canCollectHerbBox = varbValue < 15; // < 15 can claim
+		canCollectHerbBox = varbValue < 15; // < 15 cant claim
 	}
 
 	private void checkCanCollectStaves(int varbValue)
 	{
-		canCollectHerbBox = varbValue == 0; // 1 = can't claim
+		canCollectStaves = varbValue == 0; // 1 = can't claim
 	}
 
 	private void checkCanCollectEssence(int varbValue)
 	{
-		canCollectHerbBox = varbValue < 0; // 1 = can't claim
+		canCollectEssence = varbValue == 0; // 1 = can't claim
 	}
 
 	private void cacheColors()

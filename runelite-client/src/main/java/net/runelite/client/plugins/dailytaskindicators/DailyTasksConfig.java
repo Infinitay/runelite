@@ -38,36 +38,33 @@ public interface DailyTasksConfig extends Config
 	@ConfigItem(
 		keyName = "showHerbBoxes",
 		name = "Show Herb Boxes",
-		description = "Configures whether or not to show a message when you can" +
-			" <br/>collect your daily herb boxes at NMZ",
+		description = "Configures whether or not to show a message for herb boxes",
 		position = 1
 	)
 	default boolean showHerbBoxes()
 	{
-		return true;
+		return false;
 	}
 
 	@ConfigItem(
 		keyName = "showStaves",
 		name = "Show Claimable Staves",
-		description = "Configures whether or not to show a message when you can" +
-			" <br/>collect your daily staves from Zaff",
+		description = "Configures whether or not to show a message for daily staves",
 		position = 2
 	)
 	default boolean showStaves()
 	{
-		return true;
+		return false;
 	}
 
 	@ConfigItem(
 		keyName = "showEssence",
 		name = "Show Claimable Essence",
-		description = "Configures whether or not to show a message when you can" +
-			" <br/>collect your daily pure essence from Wizard Cromperty",
+		description = "Configures whether or not to show a message for daily pure essence",
 		position = 3
 	)
 	default boolean showEssence()
 	{
-		return true;
+		return false;
 	}
 }
