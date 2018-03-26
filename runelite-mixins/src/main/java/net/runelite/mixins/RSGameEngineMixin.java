@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2018 Abex
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,25 +22,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.bosstimer;
+package net.runelite.mixins;
 
-import java.awt.image.BufferedImage;
-import java.time.temporal.ChronoUnit;
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.ui.overlay.infobox.Timer;
+import net.runelite.api.mixins.Copy;
+import net.runelite.api.mixins.Inject;
+import net.runelite.api.mixins.Mixin;
+import net.runelite.api.mixins.Replace;
+import net.runelite.rs.api.RSGameEngine;
 
-class RespawnTimer extends Timer
+@Mixin(RSGameEngine.class)
+public abstract class RSGameEngineMixin implements RSGameEngine
 {
-	private final Boss boss;
+	@Inject
+	private Thread thread;
 
-	public RespawnTimer(Boss boss, BufferedImage bossImage, Plugin plugin)
+	@Inject
+	@Override
+	public Thread getClientThread()
 	{
-		super(boss.getSpawnTime().toMillis(), ChronoUnit.MILLIS, bossImage, plugin);
-		this.boss = boss;
+		return thread;
 	}
 
-	public Boss getBoss()
+	@Inject
+	@Override
+	public boolean isClientThread()
 	{
-		return boss;
+		return thread == Thread.currentThread();
+	}
+
+	@Copy("run")
+	public abstract void rs$run();
+
+	@Replace("run")
+	public void rl$run()
+	{
+		thread = Thread.currentThread();
+		rs$run();
 	}
 }

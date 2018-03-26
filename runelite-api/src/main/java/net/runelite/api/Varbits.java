@@ -266,6 +266,14 @@ public enum Varbits
 	PYRAMID_PLUNDER_ROOM(2377),
 
 	/**
+	 * Spicy stew ingredients
+	 */
+	SPICY_STEW_RED_SPICES(1879),
+	SPICY_STEW_YELLOW_SPICES(1880),
+	SPICY_STEW_BROWN_SPICES(1881),
+	SPICY_STEW_ORANGE_SPICES(1882),
+
+	/**
 	 * Multicombat area
 	 */
 	MULTICOMBAT_AREA(4605),
@@ -281,7 +289,6 @@ public enum Varbits
 	 */
 	DAILY_HERB_BOX(3961),
 	DAILY_STAVES(4539),
-	DAILY_SAND(4549),
 	DAILY_ESSENCE(4547);
 
 	/**

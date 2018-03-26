@@ -36,7 +36,6 @@ import net.runelite.api.GameState;
 import net.runelite.api.Varbits;
 import net.runelite.api.events.ConfigChanged;
 import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.VarbitChanged;
 import net.runelite.client.chat.ChatColor;
 import net.runelite.client.chat.ChatColorType;
 import net.runelite.client.chat.ChatMessageBuilder;
@@ -61,7 +60,6 @@ public class DailyTasksPlugin extends Plugin
 	@Inject
 	private ChatMessageManager chatMessageManager;
 
-	private boolean canCollectHerbBox, canCollectStaves, canCollectEssence;
 	private boolean hasSentHerbMsg, hasSentStavesMsg, hasSentEssenceMsg;
 
 	@Provides
@@ -73,7 +71,6 @@ public class DailyTasksPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		canCollectHerbBox = canCollectStaves = canCollectEssence = false;
 		hasSentHerbMsg = hasSentStavesMsg = hasSentEssenceMsg = false;
 		cacheColors();
 	}
@@ -81,7 +78,6 @@ public class DailyTasksPlugin extends Plugin
 	@Override
 	protected void shutDown() throws Exception
 	{
-		canCollectHerbBox = canCollectStaves = canCollectEssence = false;
 		hasSentHerbMsg = hasSentStavesMsg = hasSentEssenceMsg = false;
 	}
 
@@ -106,38 +102,21 @@ public class DailyTasksPlugin extends Plugin
 	}
 
 	@Subscribe
-	public void onVarbitChanged(VarbitChanged event)
-	{
-		if (config.showHerbBoxes())
-		{
-			checkCanCollectHerbBox(client.getSetting(Varbits.DAILY_HERB_BOX));
-		}
-		if (config.showStaves())
-		{
-			checkCanCollectStaves(client.getSetting(Varbits.DAILY_STAVES));
-		}
-		if (config.showEssence())
-		{
-			checkCanCollectEssence(client.getSetting(Varbits.DAILY_ESSENCE));
-		}
-	}
-
-	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
 		if (event.getGameState().equals(GameState.LOGGED_IN))
 		{
-			if (config.showHerbBoxes() && !hasSentHerbMsg && canCollectHerbBox)
+			if (config.showHerbBoxes() && !hasSentHerbMsg && checkCanCollectHerbBox())
 			{
 				sendChatMessage("You have herb boxes waiting to be collected at NMZ.");
 				hasSentHerbMsg = true;
 			}
-			if (config.showStaves() && !hasSentStavesMsg && canCollectStaves)
+			if (config.showStaves() && !hasSentStavesMsg && checkCanCollectStaves())
 			{
 				sendChatMessage("You have staves waiting to be collected from Zaff.");
 				hasSentStavesMsg = true;
 			}
-			if (config.showEssence() && !hasSentEssenceMsg && canCollectEssence)
+			if (config.showEssence() && !hasSentEssenceMsg && checkCanCollectEssence())
 			{
 				sendChatMessage("You have pure essence waiting to be collected from Wizard Cromperty.");
 				hasSentEssenceMsg = true;
@@ -145,19 +124,22 @@ public class DailyTasksPlugin extends Plugin
 		}
 	}
 
-	private void checkCanCollectHerbBox(int varbValue)
+	private boolean checkCanCollectHerbBox()
 	{
-		canCollectHerbBox = varbValue < 15; // < 15 cant claim
+		int value = client.getSetting(Varbits.DAILY_HERB_BOX);
+		return value < 15; // < 15 can claim
 	}
 
-	private void checkCanCollectStaves(int varbValue)
+	private boolean checkCanCollectStaves()
 	{
-		canCollectStaves = varbValue == 0; // 1 = can't claim
+		int value = client.getSetting(Varbits.DAILY_STAVES);
+		return value == 0; // 1 = can't claim
 	}
 
-	private void checkCanCollectEssence(int varbValue)
+	private boolean checkCanCollectEssence()
 	{
-		canCollectEssence = varbValue == 0; // 1 = can't claim
+		int value = client.getSetting(Varbits.DAILY_ESSENCE);
+		return value < 0; // 1 = can't claim
 	}
 
 	private void cacheColors()
@@ -168,7 +150,14 @@ public class DailyTasksPlugin extends Plugin
 	private void sendChatMessage(String chatMessage)
 	{
 		final String message = new ChatMessageBuilder()
-			.append(ChatColorType.HIGHLIGHT).append(chatMessage).build();
-		chatMessageManager.queue(QueuedMessage.builder().type(ChatMessageType.GAME).runeLiteFormattedMessage(message).build());
+			.append(ChatColorType.HIGHLIGHT)
+			.append(chatMessage)
+			.build();
+
+		chatMessageManager.queue(
+			QueuedMessage.builder()
+				.type(ChatMessageType.GAME)
+				.runeLiteFormattedMessage(message)
+				.build());
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2018 Abex
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,25 +22,54 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.bosstimer;
+package net.runelite.client.callback;
 
-import java.awt.image.BufferedImage;
-import java.time.temporal.ChronoUnit;
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.ui.overlay.infobox.Timer;
+import com.google.inject.Inject;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
 
-class RespawnTimer extends Timer
+@Singleton
+@Slf4j
+public class ClientThread
 {
-	private final Boss boss;
+	private ConcurrentLinkedQueue<Runnable> invokes = new ConcurrentLinkedQueue<>();
 
-	public RespawnTimer(Boss boss, BufferedImage bossImage, Plugin plugin)
+	@Inject
+	private Client client;
+
+	public void invokeLater(Runnable r)
 	{
-		super(boss.getSpawnTime().toMillis(), ChronoUnit.MILLIS, bossImage, plugin);
-		this.boss = boss;
+		if (client.isClientThread())
+		{
+			r.run();
+			return;
+		}
+		invokes.add(r);
 	}
 
-	public Boss getBoss()
+	void invoke()
 	{
-		return boss;
+		assert client.isClientThread();
+		Iterator<Runnable> ir = invokes.iterator();
+		for (; ir.hasNext(); )
+		{
+			Runnable r = ir.next();
+			ir.remove();
+			try
+			{
+				r.run();
+			}
+			catch (ThreadDeath d)
+			{
+				throw d;
+			}
+			catch (Throwable e)
+			{
+				log.warn("Exception in invokeLater", e);
+			}
+		}
 	}
 }

@@ -22,7 +22,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.runelite.client.plugins.dailytaskindicators;
 
 import net.runelite.client.config.Config;
@@ -32,39 +31,43 @@ import net.runelite.client.config.ConfigItem;
 @ConfigGroup(
 	keyName = "dailytaskindicators",
 	name = "Daily Task Indicators",
-	description = "Configuration for Daily Task Indicators plugin")
+	description = "Configuration for Daily Task Indicators plugin"
+)
 public interface DailyTasksConfig extends Config
 {
 	@ConfigItem(
 		keyName = "showHerbBoxes",
 		name = "Show Herb Boxes",
-		description = "Configures whether or not to show a message for herb boxes",
+		description = "Configures whether or not to show a message when you can" +
+			" collect your daily herb boxes at NMZ",
 		position = 1
 	)
 	default boolean showHerbBoxes()
 	{
-		return false;
+		return true;
 	}
 
 	@ConfigItem(
 		keyName = "showStaves",
 		name = "Show Claimable Staves",
-		description = "Configures whether or not to show a message for daily staves",
+		description = "Configures whether or not to show a message when you can" +
+			" collect your daily staves from Zaff",
 		position = 2
 	)
 	default boolean showStaves()
 	{
-		return false;
+		return true;
 	}
 
 	@ConfigItem(
 		keyName = "showEssence",
 		name = "Show Claimable Essence",
-		description = "Configures whether or not to show a message for daily pure essence",
+		description = "Configures whether or not to show a message when you can" +
+			" collect your daily pure essence from Wizard Cromperty",
 		position = 3
 	)
 	default boolean showEssence()
 	{
-		return false;
+		return true;
 	}
 }
