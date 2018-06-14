@@ -100,6 +100,7 @@ public class WidgetID
 	public static final int MTA_ENCHANTMENT_GROUP_ID = 195;
 	public static final int MTA_GRAVEYARD_GROUP_ID = 196;
 	public static final int MTA_TELEKINETIC_GROUP_ID = 198;
+	public static final int CORPOREAL_BEAST_DAMAGE_GROUP_ID = 13;
 
 	static class WorldMap
 	{
@@ -460,7 +461,7 @@ public class WidgetID
 	{
 		static final int POINTS_INFOBOX = 3;
 	}
-	
+
 	static class ExperienceDrop
 	{
 		static final int DROP_1 = 15;
