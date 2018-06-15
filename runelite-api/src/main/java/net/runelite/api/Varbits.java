@@ -367,7 +367,12 @@ public enum Varbits
 	/**
 	 * The varbit that stores the players {@code AccountType}.
 	 */
-	ACCOUNT_TYPE(1777);
+	ACCOUNT_TYPE(1777),
+
+	/**
+	 * The amount of damage done to Corporeal Beast
+	 */
+	CORPOREAL_BEAST_DAMAGE_DONE(999);
 
 	/**
 	 * The raw varbit ID.
