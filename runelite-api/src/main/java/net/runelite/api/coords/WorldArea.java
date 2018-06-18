@@ -681,7 +681,8 @@ public class WorldArea
 	 * @param actor
 	 * @return actor is in WorldArea
 	 */
-	public boolean contains(Actor actor) {
+	public boolean contains(Actor actor)
+	{
 		return toWorldPointList().contains(actor.getWorldLocation());
 	}
 
@@ -691,7 +692,8 @@ public class WorldArea
 	 * @param tile
 	 * @return tile is in WorldArea
 	 */
-	public boolean contains(Tile tile) {
+	public boolean contains(Tile tile)
+	{
 		return toWorldPointList().contains(tile.getWorldLocation());
 	}
 }
