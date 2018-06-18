@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import lombok.Getter;
+import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.CollisionData;
 import net.runelite.api.CollisionDataFlag;
@@ -86,6 +87,15 @@ public class WorldArea
 		this.plane = location.getPlane();
 		this.width = width;
 		this.height = height;
+	}
+
+	public WorldArea(WorldPoint location, int radius)
+	{
+		this.x = location.getX() - radius;
+		this.y = location.getY() - radius;
+		this.plane = location.getPlane();
+		this.width = radius * 2;
+		this.height = radius * 2;
 	}
 
 	/**
@@ -663,5 +673,25 @@ public class WorldArea
 		}
 
 		return list;
+	}
+
+	/**
+	 * Determines whether or not the specified actor is within the WorldArea
+	 *
+	 * @param actor
+	 * @return actor is in WorldArea
+	 */
+	public boolean contains(Actor actor) {
+		return toWorldPointList().contains(actor.getWorldLocation());
+	}
+
+	/**
+	 * Determines whether or not the specified tile is within the WorldArea
+	 *
+	 * @param tile
+	 * @return tile is in WorldArea
+	 */
+	public boolean contains(Tile tile) {
+		return toWorldPointList().contains(tile.getWorldLocation());
 	}
 }
