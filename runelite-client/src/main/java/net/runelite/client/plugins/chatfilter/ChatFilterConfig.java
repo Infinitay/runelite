@@ -37,11 +37,31 @@ import net.runelite.client.config.ConfigItem;
 public interface ChatFilterConfig extends Config
 {
 	@ConfigItem(
-		keyName = "spamFilter",
-		name = "Enable Spam Filter",
-		description = "Filters out messages advertising gold selling"
+		keyName = "rwtFilter",
+		name = "Filter RWT Advertisers",
+		description = "Filters out messages involving RWT"
 	)
-	default boolean spamFilter()
+	default boolean rwtFilter()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "scamFilter",
+		name = "Filter Scams",
+		description = "Filters out messages typically involving scams"
+	)
+	default boolean scamFilter()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "begFilter",
+		name = "Filter Beggers",
+		description = "Filters out messages begging for gold"
+	)
+	default boolean begFilter()
 	{
 		return true;
 	}
