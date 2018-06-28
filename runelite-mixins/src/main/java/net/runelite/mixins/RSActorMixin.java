@@ -213,9 +213,7 @@ public abstract class RSActorMixin implements RSActor
 	@Inject
 	public void overheadChanged(int idx)
 	{
-		OverheadTextChanged overheadTextChanged = new OverheadTextChanged();
-		overheadTextChanged.setActor(this);
-		client.getCallbacks().post(overheadTextChanged);
+		client.getCallbacks().post(new OverheadTextChanged(this));
 	}
 
 	@Inject

@@ -25,11 +25,11 @@
 
 package net.runelite.api.events;
 
-import lombok.Data;
+import lombok.Value;
 import net.runelite.api.Actor;
 
 
-@Data
+@Value
 public class OverheadTextChanged
 {
 	/**
