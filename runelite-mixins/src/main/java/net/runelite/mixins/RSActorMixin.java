@@ -213,7 +213,10 @@ public abstract class RSActorMixin implements RSActor
 	@Inject
 	public void overheadChanged(int idx)
 	{
-		client.getCallbacks().post(new OverheadTextChanged(this));
+		if (this.getName() != null)
+		{
+			client.getCallbacks().post(new OverheadTextChanged(this));
+		}
 	}
 
 	@Inject
@@ -235,7 +238,7 @@ public abstract class RSActorMixin implements RSActor
 		int size = 1;
 		if (this instanceof NPC)
 		{
-			NPCComposition composition = ((NPC)this).getComposition();
+			NPCComposition composition = ((NPC) this).getComposition();
 			if (composition != null && composition.getConfigs() != null)
 			{
 				composition = composition.transform();
@@ -274,12 +277,12 @@ public abstract class RSActorMixin implements RSActor
 	 * Note that this event runs even if the hitsplat didn't show up,
 	 * i.e. the actor already had 4 visible hitsplats.
 	 *
-	 * @param type The hitsplat type (i.e. color)
-	 * @param value The value of the hitsplat (i.e. how high the hit was)
-	 * @param var3 unknown
-	 * @param var4 unknown
+	 * @param type      The hitsplat type (i.e. color)
+	 * @param value     The value of the hitsplat (i.e. how high the hit was)
+	 * @param var3      unknown
+	 * @param var4      unknown
 	 * @param gameCycle The gamecycle the hitsplat was applied on
-	 * @param duration The amount of gamecycles the hitsplat will last for
+	 * @param duration  The amount of gamecycles the hitsplat will last for
 	 */
 	@Inject
 	@MethodHook(value = "applyActorHitsplat", end = true)
