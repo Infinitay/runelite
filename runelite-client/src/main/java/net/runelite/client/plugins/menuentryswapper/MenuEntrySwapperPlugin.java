@@ -76,6 +76,7 @@ import net.runelite.client.menus.WidgetMenuOption;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
+import net.runelite.client.plugins.menuentryswapper.util.BankingMode;
 import net.runelite.client.plugins.menuentryswapper.util.FairyRingMode;
 import net.runelite.client.plugins.menuentryswapper.util.HouseMode;
 import net.runelite.client.plugins.menuentryswapper.util.ObeliskMode;
@@ -213,6 +214,17 @@ public class MenuEntrySwapperPlugin extends Plugin
 		/*loadConstructionIDs(config.getConstructionItems());*/
 		removeSwaps();
 		addSwaps();
+
+		/*
+		* Have to add it before rest of the if statements check otherwise it'll never get called
+		* In the future look into the rest of the if statements, they potentially might be
+		* broken?
+		 */
+		if (event.getKey().equals("bankingMode"))
+		{
+			configManager.setConfiguration(event.getGroup(), BankingMode.valueOf(event.getOldValue()).getHiddenKeyName(), false);
+			configManager.setConfiguration(event.getGroup(), BankingMode.valueOf(event.getNewValue()).getHiddenKeyName(), true);
+		}
 
 		if (!CONFIG_GROUP.equals(event.getGroup()))
 		{

@@ -1066,6 +1066,7 @@ public class ConfigPanel extends PluginPanel
 		{
 			JComboBox jComboBox = (JComboBox) component;
 			configManager.setConfiguration(cd.getGroup().value(), cid.getItem().keyName(), ((Enum) jComboBox.getSelectedItem()).name());
+			reloadPluginlist(listItem, config, cd);
 		}
 		else if (component instanceof HotkeyButton)
 		{
