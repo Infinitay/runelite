@@ -103,6 +103,8 @@ public class AoeWarningPlugin extends Plugin
 	@Getter(AccessLevel.PACKAGE)
 	private List<WorldPoint> CrystalSpike = new ArrayList<>();
 
+	private int lastProjectileCycle;
+
 	@Provides
 	AoeWarningConfig getConfig(ConfigManager configManager)
 	{
@@ -139,6 +141,11 @@ public class AoeWarningPlugin extends Plugin
 	{
 		Projectile projectile = event.getProjectile();
 
+		// Prevent spamming notifications from multiple AOEs on the same game cycle such as Vorkath's acid attack
+		if (projectile.getStartMovementCycle() == lastProjectileCycle)
+		{
+			return;
+		}
 		int projectileId = projectile.getId();
 		int projectileLifetime = config.delay() + (projectile.getRemainingCycles() * 20);
 		AoeProjectileInfo aoeProjectileInfo = AoeProjectileInfo.getById(projectileId);
@@ -147,6 +154,7 @@ public class AoeWarningPlugin extends Plugin
 			LocalPoint targetPoint = event.getPosition();
 			AoeProjectile aoeProjectile = new AoeProjectile(Instant.now(), targetPoint, aoeProjectileInfo, projectileLifetime);
 			projectiles.put(projectile, aoeProjectile);
+			lastProjectileCycle = projectile.getStartMovementCycle();
 
 			if (config.aoeNotifyAll() || isConfigEnabledForProjectileId(projectileId, true))
 			{
